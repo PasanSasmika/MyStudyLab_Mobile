@@ -1,20 +1,28 @@
+import './global.css'; // <--- CRITICAL FOR NATIVEWIND V4
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { useAppStore } from './src/store/appStore';
+
+import Onboarding from './src/screens/Onboarding';
+import Login from './src/screens/Login';
+
+const Stack = createStackNavigator();
 
 export default function App() {
+  const hasSeenOnboarding = useAppStore((state) => state.hasSeenOnboarding);
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <StatusBar style="dark" />
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        {!hasSeenOnboarding ? (
+          <Stack.Screen name="Onboarding" component={Onboarding} />
+        ) : (
+          <Stack.Screen name="Login" component={Login} />
+        )}
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
